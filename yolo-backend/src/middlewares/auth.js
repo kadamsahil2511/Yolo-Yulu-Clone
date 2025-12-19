@@ -6,7 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-default-secret-key";
  * Auth middleware for token verification
  * Verifies JWT from Authorization header
  */
-authMiddleware = (request, response, next) => {
+const authMiddleware = (request, response, next) => {
     try {
         const authHeader = request.headers.authorization;
 

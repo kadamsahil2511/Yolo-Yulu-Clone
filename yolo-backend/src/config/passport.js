@@ -74,7 +74,7 @@ const jwtStrategy = new JwtStrategy(jwtOptions, async (payload, done) => {
  * Initialize Passport with strategies
  * @param {object} passport - Passport instance
  */
-initializePassport = (passport) => {
+const initializePassport = (passport) => {
     passport.use("local", localStrategy);
     passport.use("jwt", jwtStrategy);
 

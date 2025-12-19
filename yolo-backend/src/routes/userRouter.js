@@ -1,13 +1,14 @@
 const express = require("express");
-const { authenticateLocal, authenticateJWT } = require("../middlewares/passportAuth");
 const { register, login, getProfile, updateProfile, addBalance } = require("../controllers/userController");
+const authMiddleware = require("../middlewares/auth");
 
 const router = express.Router();
 
 router.post("/register", register);
-router.post("/login", authenticateLocal, login);
-router.get("/profile", authenticateJWT, getProfile);
-router.put("/profile", authenticateJWT, updateProfile);
-router.post("/balance/add", authenticateJWT, addBalance);
+router.post("/login", login);
+router.get("/profile", authMiddleware, getProfile);
+router.put("/profile", authMiddleware, updateProfile);
+router.post("/balance/add", authMiddleware, addBalance);
 
 module.exports = router;
+
