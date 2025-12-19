@@ -1,0 +1,411 @@
+@import "tailwindcss";
+
+/* ==================== UBER-STYLE DESIGN SYSTEM ==================== */
+
+:root {
+  /* Uber Dark Theme */
+  --color-black: #000000;
+  --color-dark: #0D0D0D;
+  --color-dark-elevated: #1A1A1A;
+  --color-dark-card: #222222;
+  --color-dark-hover: #2A2A2A;
+
+  /* Accent Colors */
+  --color-primary: #FFFFFF;
+  --color-accent: #276EF1;
+  /* Uber Blue */
+  --color-green: #05A357;
+  --color-yellow: #FFC043;
+  --color-red: #E54B4B;
+
+  /* Text */
+  --color-text: #FFFFFF;
+  --color-text-secondary: #A0A0A0;
+  --color-text-muted: #6B6B6B;
+
+  /* Spacing */
+  --nav-height: 80px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+/* ==================== RESET & BASE ==================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  background: var(--color-black);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ==================== TYPOGRAPHY ==================== */
+
+.text-display {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.text-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.text-body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.text-caption {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.text-small {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ==================== UBER CARDS ==================== */
+
+.uber-card {
+  background: var(--color-dark-card);
+  border-radius: 16px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.uber-card:active {
+  transform: scale(0.98);
+  background: var(--color-dark-hover);
+}
+
+.uber-card-elevated {
+  background: var(--color-dark-elevated);
+  border-radius: 24px;
+  box-shadow: var(--shadow-card);
+}
+
+/* ==================== UBER BUTTONS ==================== */
+
+.uber-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.uber-btn:active {
+  transform: scale(0.97);
+}
+
+.uber-btn-primary {
+  background: var(--color-primary);
+  color: var(--color-black);
+}
+
+.uber-btn-primary:hover {
+  background: #E5E5E5;
+}
+
+.uber-btn-secondary {
+  background: var(--color-dark-card);
+  color: var(--color-text);
+}
+
+.uber-btn-accent {
+  background: var(--color-accent);
+  color: white;
+}
+
+.uber-btn-danger {
+  background: var(--color-red);
+  color: white;
+}
+
+.uber-btn-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+/* ==================== UBER BOTTOM SHEET ==================== */
+
+.uber-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-dark);
+  border-radius: 24px 24px 0 0;
+  padding: 12px 20px calc(20px + var(--safe-bottom));
+  z-index: 50;
+  box-shadow: var(--shadow-elevated);
+}
+
+.uber-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--color-dark-hover);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+/* ==================== UBER SEARCH BAR ==================== */
+
+.uber-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-dark-card);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.uber-search:hover {
+  background: var(--color-dark-hover);
+}
+
+.uber-search-icon {
+  width: 8px;
+  height: 8px;
+  background: var(--color-green);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ==================== MAP STYLES ==================== */
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: var(--color-black);
+}
+
+.leaflet-control-attribution {
+  display: none;
+}
+
+/* ==================== FLOATING ELEMENTS ==================== */
+
+.uber-floating-btn {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background: var(--color-dark-elevated);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+  z-index: 10;
+}
+
+.uber-floating-btn:hover {
+  background: var(--color-dark-card);
+}
+
+.uber-floating-btn:active {
+  transform: scale(0.95);
+}
+
+/* ==================== STATUS BADGES ==================== */
+
+.uber-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.uber-badge-live {
+  background: rgba(5, 163, 87, 0.15);
+  color: var(--color-green);
+}
+
+.uber-badge-warning {
+  background: rgba(255, 192, 67, 0.15);
+  color: var(--color-yellow);
+}
+
+/* ==================== ANIMATIONS ==================== */
+
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+/* ==================== BOTTOM NAV ==================== */
+
+.uber-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height);
+  background: var(--color-dark);
+  border-top: 1px solid var(--color-dark-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-bottom: var(--safe-bottom);
+  z-index: 40;
+}
+
+.uber-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.uber-nav-item.active {
+  color: var(--color-text);
+}
+
+.uber-nav-item span {
+  font-size: 0.625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ==================== SCANNER OVERLAY ==================== */
+
+.scanner-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-black);
+  z-index: 60;
+}
+
+/* ==================== SCROLLBAR ==================== */
+
+::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+/* ==================== UBER PILL TABS ==================== */
+
+.uber-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 4px 0;
+}
+
+.uber-pill {
+  flex-shrink: 0;
+  padding: 10px 20px;
+  background: var(--color-dark-card);
+  border-radius: 24px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+}
+
+.uber-pill:hover {
+  background: var(--color-dark-hover);
+}
+
+.uber-pill.active {
+  background: var(--color-primary);
+  color: var(--color-black);
+}
+
+/* ==================== LIST ITEMS ==================== */
+
+.uber-list-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-dark-card);
+}
+
+.uber-list-item:last-child {
+  border-bottom: none;
+}
+
+.uber-list-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--color-dark-card);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
