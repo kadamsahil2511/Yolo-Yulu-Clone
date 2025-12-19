@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { mockBikes, mockUser, mockRideHistory, createMockRide } from './mockData';
 
-// Create axios instance - configured for deployed backend
+// Create axios instance
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001',
     timeout: 10000,
@@ -19,58 +19,50 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// Flag to use mock data (controlled by AppContext)
-let useMockData = false; // Default to real API now
-
-export function setMockMode(enabled) {
-    useMockData = enabled;
-}
-
 // ============== BIKE ENDPOINTS ==============
 
 /**
- * Get all available bikes
- * @returns {Promise<import('../types').Bike[]>}
+ * Get all available bikes - with fallback to mock data
  */
 export async function getAvailableBikes() {
-    if (useMockData) {
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+        const response = await api.get('/bikes');
+        return response.data.bikes || [];
+    } catch (error) {
+        console.warn('API unavailable, using fallback data:', error.message);
         return mockBikes.filter(b => b.status === 'available');
     }
-    const response = await api.get('/bikes');
-    return response.data.bikes;
 }
 
 // ============== RIDE ENDPOINTS ==============
 
 /**
  * Unlock a bike and start a ride
- * @param {string} bikeId 
- * @returns {Promise<import('../types').Ride>}
  */
 export async function unlockBike(bikeId) {
-    if (useMockData) {
-        await new Promise(resolve => setTimeout(resolve, 800));
+    try {
+        const response = await api.post('/rides/unlock', { bikeId });
+        return response.data.data;
+    } catch (error) {
+        console.warn('API unavailable, using mock ride:', error.message);
         return createMockRide(bikeId);
     }
-    const response = await api.post('/rides/unlock', { bikeId });
-    return response.data.data;
 }
 
 /**
  * End the current ride
- * @param {string} rideId 
- * @returns {Promise<{ride: import('../types').Ride, cost: number}>}
  */
 export async function endRide(rideId) {
-    if (useMockData) {
-        await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+        const response = await api.put(`/rides/${rideId}/end`);
+        return response.data.data;
+    } catch (error) {
+        console.warn('API unavailable, using mock end ride:', error.message);
         return {
             ride: {
                 id: rideId,
                 bikeId: 'BIKE001',
-                startTime: new Date(Date.now() - 1800000).toISOString(), // 30 min ago
+                startTime: new Date(Date.now() - 1800000).toISOString(),
                 endTime: new Date().toISOString(),
                 startLocation: { lat: 18.5204, lng: 73.8567 },
                 endLocation: { lat: 18.5284, lng: 73.8487 },
@@ -81,29 +73,25 @@ export async function endRide(rideId) {
             cost: 60
         };
     }
-    const response = await api.put(`/rides/${rideId}/end`);
-    return response.data.data;
 }
 
 /**
  * Get ride history
- * @returns {Promise<import('../types').Ride[]>}
  */
 export async function getRideHistory() {
-    if (useMockData) {
-        await new Promise(resolve => setTimeout(resolve, 300));
+    try {
+        const response = await api.get('/rides/history');
+        return response.data.data || [];
+    } catch (error) {
+        console.warn('API unavailable, using mock history:', error.message);
         return mockRideHistory;
     }
-    const response = await api.get('/rides/history');
-    return response.data.data;
 }
 
 // ============== USER ENDPOINTS ==============
 
 /**
  * Register a new user
- * @param {{ email: string, password: string, name: string, phone?: string }} userData
- * @returns {Promise<{ user: object, token: string }>}
  */
 export async function registerUser(userData) {
     const response = await api.post('/users/register', userData);
@@ -114,8 +102,6 @@ export async function registerUser(userData) {
 
 /**
  * Login user
- * @param {{ email: string, password: string }} credentials
- * @returns {Promise<{ user: object, token: string }>}
  */
 export async function loginUser(credentials) {
     const response = await api.post('/users/login', credentials);
@@ -133,35 +119,41 @@ export function logoutUser() {
 
 /**
  * Get current user profile
- * @returns {Promise<import('../types').User>}
  */
 export async function getUserProfile() {
-    if (useMockData) {
-        await new Promise(resolve => setTimeout(resolve, 300));
+    try {
+        const response = await api.get('/users/profile');
+        return response.data.data;
+    } catch (error) {
+        console.warn('API unavailable, using mock user:', error.message);
         return mockUser;
     }
-    const response = await api.get('/users/profile');
-    return response.data.data;
 }
 
 /**
  * Update user profile
- * @param {{ name?: string, phone?: string, avatar?: string }} updateData
- * @returns {Promise<import('../types').User>}
  */
 export async function updateUserProfile(updateData) {
-    const response = await api.put('/users/profile', updateData);
-    return response.data.data;
+    try {
+        const response = await api.put('/users/profile', updateData);
+        return response.data.data;
+    } catch (error) {
+        console.warn('API unavailable:', error.message);
+        return { ...mockUser, ...updateData };
+    }
 }
 
 /**
  * Add balance to wallet
- * @param {number} amount
- * @returns {Promise<{ balance: number }>}
  */
 export async function addBalance(amount) {
-    const response = await api.post('/users/balance/add', { amount });
-    return response.data.data;
+    try {
+        const response = await api.post('/users/balance/add', { amount });
+        return response.data.data;
+    } catch (error) {
+        console.warn('API unavailable:', error.message);
+        return { balance: mockUser.balance + amount };
+    }
 }
 
 export default api;
