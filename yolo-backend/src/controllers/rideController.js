@@ -6,7 +6,7 @@ const User = require("../models/User");
  * POST /rides/unlock
  * Unlock a bike and start a new ride (like issueBook)
  */
-unlockBike = async (request, response) => {
+const unlockBike = async (request, response) => {
     try {
         const { bikeId, lat, lng } = request.body;
         const userId = request.user._id;
@@ -73,7 +73,7 @@ unlockBike = async (request, response) => {
  * PUT /rides/:id/end
  * End a ride (like returnBook)
  */
-endRide = async (request, response) => {
+const endRide = async (request, response) => {
     try {
         const { rideId } = request.params;
         const { lat, lng } = request.body;
@@ -136,7 +136,7 @@ endRide = async (request, response) => {
  * GET /rides/active
  * Get user's current active ride
  */
-getActiveRide = async (request, response) => {
+const getActiveRide = async (request, response) => {
     try {
         const ride = await Ride.findOne({
             user: request.user._id,
@@ -160,7 +160,7 @@ getActiveRide = async (request, response) => {
  * GET /rides/history
  * Get user's ride history
  */
-getRideHistory = async (request, response) => {
+const getRideHistory = async (request, response) => {
     try {
         const { page = 1, limit = 10 } = request.query;
 
@@ -191,7 +191,7 @@ getRideHistory = async (request, response) => {
  * PUT /rides/:id/cancel
  * Cancel an active ride
  */
-cancelRide = async (request, response) => {
+const cancelRide = async (request, response) => {
     try {
         const { rideId } = request.params;
         const userId = request.user._id;

@@ -7,7 +7,7 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
 /**
  * Generate JWT Token
  */
-generateToken = (user) => {
+const generateToken = (user) => {
     const payload = {
         id: user._id.toString(),
         email: user.email
@@ -20,7 +20,7 @@ generateToken = (user) => {
  * POST /users/register
  * Register a new user
  */
-register = async (request, response) => {
+const register = async (request, response) => {
     try {
         const { email, password, name, phone } = request.body;
 
@@ -47,11 +47,12 @@ register = async (request, response) => {
             data: { user: newUser.toJSON(), token }
         });
     } catch (error) {
+        console.error("Register error:", error);
         if (error.name === "ValidationError") {
             const messages = Object.values(error.errors).map((e) => e.message);
             return response.status(400).json({ message: messages.join(", ") });
         }
-        response.status(500).json({ message: "Internal Server Error" });
+        response.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 };
 
@@ -59,7 +60,7 @@ register = async (request, response) => {
  * POST /users/login
  * Login user and issue JWT
  */
-login = async (request, response) => {
+const login = async (request, response) => {
     try {
         const user = request.user;
         const token = generateToken(user);
@@ -77,7 +78,7 @@ login = async (request, response) => {
  * GET /users/profile
  * Get current user's profile
  */
-getProfile = async (request, response) => {
+const getProfile = async (request, response) => {
     try {
         const user = await User.findById(request.user._id).populate("activeRide");
 
@@ -98,7 +99,7 @@ getProfile = async (request, response) => {
  * PUT /users/profile
  * Update current user's profile
  */
-updateProfile = async (request, response) => {
+const updateProfile = async (request, response) => {
     try {
         const { name, phone, avatar } = request.body;
 
@@ -130,7 +131,7 @@ updateProfile = async (request, response) => {
  * POST /users/balance/add
  * Add balance to user wallet
  */
-addBalance = async (request, response) => {
+const addBalance = async (request, response) => {
     try {
         const { amount } = request.body;
 

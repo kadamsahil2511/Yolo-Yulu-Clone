@@ -126,6 +126,6 @@ schema.methods.toJSON = function () {
     return obj;
 };
 
-const Ride = new mongoose.model("Ride", schema);
+const Ride = mongoose.model("Ride", schema);
 
 module.exports = Ride;

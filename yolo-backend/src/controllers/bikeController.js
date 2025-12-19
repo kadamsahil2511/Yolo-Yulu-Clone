@@ -4,7 +4,7 @@ const Bike = require("../models/Bike");
  * GET /bikes
  * Get all available bikes
  */
-getAllBikes = async (request, response) => {
+const getAllBikes = async (request, response) => {
     try {
         const bikes = await Bike.find({ status: "available" }).limit(50);
         response.status(200).json({ bikes });
@@ -17,7 +17,7 @@ getAllBikes = async (request, response) => {
  * GET /bikes/nearby
  * Get available bikes near a location
  */
-getNearbyBikes = async (request, response) => {
+const getNearbyBikes = async (request, response) => {
     try {
         const { lat, lng, radius } = request.query;
 
@@ -48,7 +48,7 @@ getNearbyBikes = async (request, response) => {
  * GET /bikes/:id
  * Get a specific bike by ID
  */
-getBikeById = async (request, response) => {
+const getBikeById = async (request, response) => {
     try {
         const foundBike = await Bike.findOne({ bikeId: request.params.id.toUpperCase() });
 
@@ -66,7 +66,7 @@ getBikeById = async (request, response) => {
  * POST /bikes
  * Create a new bike (Admin only)
  */
-createBike = async (request, response) => {
+const createBike = async (request, response) => {
     try {
         const { bikeId, model, batteryLevel, lat, lng, qrCode } = request.body;
 
@@ -101,7 +101,7 @@ createBike = async (request, response) => {
  * PUT /bikes/:id
  * Update a bike's information
  */
-updateBike = async (request, response) => {
+const updateBike = async (request, response) => {
     try {
         const { model, batteryLevel, status, lat, lng } = request.body;
 
@@ -136,7 +136,7 @@ updateBike = async (request, response) => {
  * DELETE /bikes/:id
  * Delete a bike
  */
-deleteBike = async (request, response) => {
+const deleteBike = async (request, response) => {
     try {
         const deletedBike = await Bike.findOneAndDelete({ bikeId: request.params.id.toUpperCase() });
 
