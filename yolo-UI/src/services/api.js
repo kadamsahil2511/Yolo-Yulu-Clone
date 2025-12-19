@@ -1,17 +1,26 @@
 import axios from 'axios';
 import { mockBikes, mockUser, mockRideHistory, createMockRide } from './mockData';
 
-// Create axios instance - configure baseURL when backend is ready
+// Create axios instance - configured for deployed backend
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || '/api',
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001',
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json'
     }
 });
 
+// Add auth token to requests
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
 // Flag to use mock data (controlled by AppContext)
-let useMockData = true;
+let useMockData = false; // Default to real API now
 
 export function setMockMode(enabled) {
     useMockData = enabled;
@@ -29,8 +38,8 @@ export async function getAvailableBikes() {
         await new Promise(resolve => setTimeout(resolve, 500));
         return mockBikes.filter(b => b.status === 'available');
     }
-    const response = await api.get('/bikes/available');
-    return response.data;
+    const response = await api.get('/bikes');
+    return response.data.bikes;
 }
 
 // ============== RIDE ENDPOINTS ==============
@@ -46,7 +55,7 @@ export async function unlockBike(bikeId) {
         return createMockRide(bikeId);
     }
     const response = await api.post('/rides/unlock', { bikeId });
-    return response.data;
+    return response.data.data;
 }
 
 /**
@@ -72,8 +81,8 @@ export async function endRide(rideId) {
             cost: 60
         };
     }
-    const response = await api.post('/rides/end', { rideId });
-    return response.data;
+    const response = await api.put(`/rides/${rideId}/end`);
+    return response.data.data;
 }
 
 /**
@@ -86,10 +95,41 @@ export async function getRideHistory() {
         return mockRideHistory;
     }
     const response = await api.get('/rides/history');
-    return response.data;
+    return response.data.data;
 }
 
 // ============== USER ENDPOINTS ==============
+
+/**
+ * Register a new user
+ * @param {{ email: string, password: string, name: string, phone?: string }} userData
+ * @returns {Promise<{ user: object, token: string }>}
+ */
+export async function registerUser(userData) {
+    const response = await api.post('/users/register', userData);
+    const { user, token } = response.data.data;
+    localStorage.setItem('token', token);
+    return { user, token };
+}
+
+/**
+ * Login user
+ * @param {{ email: string, password: string }} credentials
+ * @returns {Promise<{ user: object, token: string }>}
+ */
+export async function loginUser(credentials) {
+    const response = await api.post('/users/login', credentials);
+    const { user, token } = response.data.data;
+    localStorage.setItem('token', token);
+    return { user, token };
+}
+
+/**
+ * Logout user
+ */
+export function logoutUser() {
+    localStorage.removeItem('token');
+}
 
 /**
  * Get current user profile
@@ -100,8 +140,28 @@ export async function getUserProfile() {
         await new Promise(resolve => setTimeout(resolve, 300));
         return mockUser;
     }
-    const response = await api.get('/user/profile');
-    return response.data;
+    const response = await api.get('/users/profile');
+    return response.data.data;
+}
+
+/**
+ * Update user profile
+ * @param {{ name?: string, phone?: string, avatar?: string }} updateData
+ * @returns {Promise<import('../types').User>}
+ */
+export async function updateUserProfile(updateData) {
+    const response = await api.put('/users/profile', updateData);
+    return response.data.data;
+}
+
+/**
+ * Add balance to wallet
+ * @param {number} amount
+ * @returns {Promise<{ balance: number }>}
+ */
+export async function addBalance(amount) {
+    const response = await api.post('/users/balance/add', { amount });
+    return response.data.data;
 }
 
 export default api;
